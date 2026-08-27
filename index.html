@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de Venta - ELDOR</title>
+<!-- ELDOR es la unidad que se vende (antes "gemas") -->
 <style>
   :root{
     --bg-0:#0d0a17;
@@ -205,22 +206,22 @@
   </div>
 
   <div class="field">
-    <label for="cantidad">Cantidad de gemas (mín. 1500)</label>
-    <input type="number" id="cantidad" value="1500" min="1500" step="1">
-    <div class="error" id="errorCantidad">La cantidad mínima es 1500 gemas.</div>
+    <label for="cantidad">Cantidad de ELDOR (mín. 15)</label>
+    <input type="number" id="cantidad" value="15" min="15" step="1">
+    <div class="error" id="errorCantidad">La cantidad mínima es 15 ELDOR.</div>
   </div>
 
   <div class="field">
     <label for="paridad">Paridad (0.10 a 1.00 = % del precio base)</label>
     <input type="number" id="paridad" value="0.42" min="0.10" max="1.00" step="0.01">
     <div class="error" id="errorParidad">La paridad debe estar entre 0.10 y 1.00.</div>
-    <div class="hint">Precio base de referencia: 1500 gemas = 15 USDT (0.01 USDT/gema a paridad 1:1). La paridad que ingresás es el % de ese precio base. Ej: paridad 0.42 = 42% del precio base = 0.0042 USDT/gema (igual al "$0.42/100" de la imagen).</div>
+    <div class="hint">Precio base de referencia: 15 ELDOR = 15 USDT (1 USDT/ELDOR a paridad 1:1). La paridad que ingresás es el % de ese precio base. Ej: paridad 0.42 = 42% del precio base = 0.42 USDT/ELDOR.</div>
   </div>
 
   <div class="result-box">
     <div class="result-row">
-      <span class="result-label">Cantidad de gemas</span>
-      <span class="result-value" id="outCantidad">1500</span>
+      <span class="result-label">Cantidad de ELDOR</span>
+      <span class="result-value" id="outCantidad">15</span>
     </div>
     <div class="result-row">
       <span class="result-label">Paridad elegida</span>
@@ -262,22 +263,23 @@
     return n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
-  const PRECIO_BASE_POR_GEMA = 15 / 1500; // 0.01 USDT por gema, a paridad 1:1
+  const CANTIDAD_MINIMA = 15;
+  const PRECIO_BASE_POR_ELDOR = 15 / 15; // 1 USDT por ELDOR, a paridad 1:1
 
   function calcular(){
     let cantidad = parseFloat(cantidadInput.value) || 0;
     let paridad = parseFloat(paridadInput.value) || 0;
 
-    errorCantidad.style.display = (cantidad < 1500) ? 'block' : 'none';
+    errorCantidad.style.display = (cantidad < CANTIDAD_MINIMA) ? 'block' : 'none';
     errorParidad.style.display = (paridad < 0.10 || paridad > 1.00) ? 'block' : 'none';
 
-    const precioPorGema = PRECIO_BASE_POR_GEMA * paridad;
-    const bruto = cantidad * precioPorGema;
+    const precioPorEldor = PRECIO_BASE_POR_ELDOR * paridad;
+    const bruto = cantidad * precioPorEldor;
     const comision = bruto * 0.10;
     const neto = bruto - comision;
 
     outCantidad.textContent = cantidad.toLocaleString('es-AR');
-    outParidad.textContent = paridad.toFixed(2) + '  (' + fmt(precioPorGema * 100) + ' USDT / 100 gemas)';
+    outParidad.textContent = paridad.toFixed(2) + '  (' + fmt(precioPorEldor) + ' USDT / ELDOR)';
     outBruto.textContent = fmt(bruto) + ' USDT';
     outComision.textContent = '- ' + fmt(comision) + ' USDT';
     outNeto.textContent = fmt(neto) + ' USDT';
