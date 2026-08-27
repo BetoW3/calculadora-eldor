@@ -1,3 +1,8 @@
+// Servidor solo para desarrollo local (npm start).
+// En Vercel, el frontend (index.html/style.css/script.js) se sirve como
+// archivos estáticos desde la raíz y /api/calcular corre como función serverless
+// (ver api/calcular.js). Este archivo no se usa en producción en Vercel.
+
 const express = require('express');
 const path = require('path');
 const { calcularVenta } = require('./calculadora');
@@ -5,10 +10,8 @@ const { calcularVenta } = require('./calculadora');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
-// Endpoint API: GET /api/calcular?cantidad=1500&paridad=0.42
 app.get('/api/calcular', (req, res) => {
   const { cantidad, paridad } = req.query;
   const resultado = calcularVenta(cantidad, paridad);
